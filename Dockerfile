@@ -196,15 +196,15 @@ RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
 RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
 
 # add decoderbufs support
-COPY packages /tmp/packages
+COPY dependents /tmp/dependents
 
 RUN apt-get update -y
 
 RUN apt-get install tar gcc g++ make postgresql-server-dev-9.6 -y --allow-unauthenticated
 
-RUN cd /tmp/packages \
+RUN cd /tmp/dependents \
 && tar -xvf protobuf-2.6.1.tar.gz \
-&& cd /tmp/packages/protobuf-2.6.1 \
+&& cd /tmp/dependents/protobuf-2.6.1 \
 && ./configure \
 && make \
 && make install
@@ -212,20 +212,20 @@ RUN cd /tmp/packages \
 RUN apt-get install pkg-config -y --allow-unauthenticated
 
 RUN export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig \
-&& cd /tmp/packages \
+&& cd /tmp/dependents \
 && tar -xvf protobuf-c-1.2.1.tar.gz \
-&& cd /tmp/packages/protobuf-c-1.2.1 \
+&& cd /tmp/dependents/protobuf-c-1.2.1 \
 && ./configure \
 && make \
 && make install
 
-RUN cd /tmp/packages \
+RUN cd /tmp/dependents \
 && tar -xvf postgres-decoderbufs.gz \
-&& cd /tmp/packages/postgres-decoderbufs \
+&& cd /tmp/dependents/postgres-decoderbufs \
 && make \
 && make install
 
-RUN rm -rf /tmp/packages
+RUN rm -rf /tmp/dependents
 
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
